@@ -10,6 +10,7 @@ use \App\Models\Transaksi;
 use \App\Models\Staff;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\View;
 
 class TransaksiMobileController extends Controller
 {
@@ -28,4 +29,9 @@ class TransaksiMobileController extends Controller
             return response()->json(['message' => 'No content'], 204);
         }
     }
+
+    public function grafik(Request $request,Token $token){
+        return view('grafik'); 
+    }
+
 }

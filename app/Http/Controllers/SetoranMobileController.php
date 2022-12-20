@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use \App\Models\Token;
 use \App\Models\Nasabah;
@@ -52,5 +53,15 @@ class SetoranMobileController extends Controller
             ]);
         }
         return response()->json(['message' => 'Unchanged'], 304);
+    }
+
+    public function setoran(Request $request,Token $token){
+        $data = Transaksi::where('type_transaksi','Setoran')
+        ->where('status','validated-kolektor')
+        ->with('bukutabungan.nasabah.kolektor')
+        ->get();
+
+        // dump($data);
+        return view('setoran',compact('data'));
     }
 }

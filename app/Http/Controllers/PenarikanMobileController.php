@@ -10,7 +10,7 @@ use \App\Models\Transaksi;
 use \App\Models\Staff;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\View;
 
 class PenarikanMobileController extends Controller
 {
@@ -92,5 +92,15 @@ class PenarikanMobileController extends Controller
             ]);
         }
         return response()->json(['message' => 'Unchanged'], 304);
+    }
+
+    public function penarikan(Request $request,Token $token){
+        $data = Transaksi::where('type_transaksi','Penarikan')
+        ->where('status','validated-kolektor')
+        ->with('bukutabungan.nasabah.kolektor')
+        ->get();
+
+        // dump($data);
+        return view('penarikan',compact('data'));
     }
 }
