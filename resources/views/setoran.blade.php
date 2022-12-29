@@ -29,7 +29,7 @@
                 <td>{{ $showlistsetoran->bukutabungan->nasabah->fullname }}</td>
                 <td>{{ $showlistsetoran->bukutabungan->no_tabungan }}</td>
                 <td>{{ $showlistsetoran->bukutabungan->nasabah->kolektor->fullname }}</td>
-                <td>{{ $showlistsetoran->nominal }}</td>
+                <td>Rp. {{ number_format($showlistsetoran->nominal, 0, ',', '.') }}</td>
             </tr>
         @endforeach
         </tbody>

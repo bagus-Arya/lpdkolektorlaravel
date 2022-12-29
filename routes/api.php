@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 
 Route::post('/login',[LoginMobileController::class,'login']);
-Route::post('/logout',[LoginMobileController::class,'logout']);
+
 
 Route::group(['middleware'=>['CustomAuth']],function(){
     Route::group(['middleware'=>['KetuaCustomAuth'],'prefix'=>'staff'],function(){
@@ -52,7 +52,7 @@ Route::group(['middleware'=>['CustomAuth']],function(){
         Route::post('/{token}/create',[NasabahMobileController::class,'store']);
         Route::get('/{token}/show/{nasabah}',[NasabahMobileController::class,'show']);
         Route::put('/{token}/update/{nasabah}',[NasabahMobileController::class,'update']);
-        Route::delete('/{token}/delete/{staff}',[NasabahMobileController::class,'destroy']);
+        Route::delete('/{token}/delete/{nasabah}',[NasabahMobileController::class,'destroy']);
     });
 
     Route::group(['prefix'=>'setoran'],function(){
@@ -74,9 +74,19 @@ Route::group(['middleware'=>['CustomAuth']],function(){
     Route::group(['prefix'=>'transaksi'],function(){
         Route::get('/{token}',[TransaksiMobileController::class,'index'])->middleware(['StaffCustomAuth']);
     });
+
     Route::group(['prefix'=>'tabungan'],function(){
         Route::get('/{token}',[TabunganMobileController::class,'index'])->middleware(['NasabahCustomAuth']);
+        Route::get('/{token}/transaksis',[TabunganMobileController::class,'transaksis'])->middleware(['NasabahCustomAuth']);
     });
+
+    Route::group(['prefix'=>'tabungan/staff'],function(){
+        Route::get('/{token}/{nasabah}',[TabunganMobileController::class,'indexStaff'])->middleware(['KolektorCustomAuth']);
+        Route::get('/{token}/{nasabah}/transaksis',[TabunganMobileController::class,'transaksisStaff'])->middleware(['KolektorCustomAuth']);
+    });
+
+
+    Route::delete('/logout/{token}',[LoginMobileController::class,'logout']);
 });
 
 

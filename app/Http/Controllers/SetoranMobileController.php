@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use \App\Models\Token;
 use \App\Models\Nasabah;
 use \App\Models\BukuTabungan;
 use \App\Models\Transaksi;
 use \App\Models\Staff;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SetoranMobileController extends Controller
 {
     
-    public function index(Request $request,Token $token){
+    public function index(Request $request,$token){
         if($request->get('login_user')->role=="Bendahara"){
             return Transaksi::where('type_transaksi','Setoran')->where('status','unvalidated')->with('bukutabungan.nasabah.kolektor')->get();
         }
         return response()->json(['message' => 'No content'], 204);
     }
 
-    public function store(Request $request,Token $token,Nasabah $nasabah){
+    public function store(Request $request,$token,Nasabah $nasabah){
         // return $request->get('login_user');
         if($request->get('login_user')->id!=$nasabah->staff_id){
             return response()->json(['message' => 'Forbiden'], 403);
@@ -37,31 +37,35 @@ class SetoranMobileController extends Controller
         return Transaksi::create($validate);
     }
 
-    public function updateValidasiBendahara(Request $request,Token $token,Transaksi $transaksi){
+    public function updateValidasiBendahara(Request $request,$token,Transaksi $transaksi){
         if($transaksi->type_transaksi=="Setoran" && $transaksi->status=="unvalidated"){
-            return $transaksi->update([
-                'status'=>'validated-bendahara'
+            $todayDate = Carbon::now()->format('Y-m-d');
+            $transaksi->update([
+                'status'=>'validated-bendahara',
+                'tgl_validasi_bendahara'=>$todayDate,
             ]);
+            return response()->json(['message' => 'change success'], 200);
         }
-        return response()->json(['message' => 'Unchanged'], 304);
+        return response()->json(['message' => 'Unchanged'], 400);
     }
 
-    public function updateRejectBendahara(Request $request,Token $token,Transaksi $transaksi){
+    public function updateRejectBendahara(Request $request,$token,Transaksi $transaksi){
         if($transaksi->type_transaksi=="Setoran" && $transaksi->status=="unvalidated"){
-            return $transaksi->update([
-                'status'=>'rejected-bendahara'
+            $todayDate = Carbon::now()->format('Y-m-d');
+            $transaksi->update([
+                'status'=>'rejected-bendahara',
+                'tgl_validasi_bendahara'=>$todayDate,
             ]);
+            return response()->json(['message' => 'change success'], 200);
         }
-        return response()->json(['message' => 'Unchanged'], 304);
+        return response()->json(['message' => 'Unchanged'], 400);
     }
 
-    public function setoran(Request $request,Token $token){
+    public function setoran(Request $request, $token){
         $data = Transaksi::where('type_transaksi','Setoran')
-        ->where('status','validated-kolektor')
         ->with('bukutabungan.nasabah.kolektor')
         ->get();
 
-        // dump($data);
         return view('setoran',compact('data'));
     }
 }
