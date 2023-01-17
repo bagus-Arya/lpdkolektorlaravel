@@ -16,7 +16,7 @@ class CustomAuthBendaharaMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->get('login_user')->role!="Bendahara"){
+        if(($request->get('login_user')->role!="Bendahara")||($request->get('login_user')->role!="Ketua")){
             return response()->json(['message' => 'Forbiden'], 403);
         }
         return $next($request);

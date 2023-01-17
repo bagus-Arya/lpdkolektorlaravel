@@ -31,3 +31,14 @@ Route::group(['middleware'=>['CustomAuth','BendaharaCustomAuth'],'prefix'=>'lapo
     Route::get('/setoran/{token}',[LaporanWebController::class,'indexSetoran']);
     Route::get('/setoran/{token}/download',[LaporanWebController::class,'downloadSetoran'])->name('downloadSetoran');
 });
+
+Route::group(['middleware'=>['CustomAuth','KetuaCustomAuth']],function(){
+    Route::get('/grafik_kolektors/{token}',[BendaharaGrafikWebController::class,'index']);
+});
+
+Route::group(['middleware'=>['CustomAuth','KetuaCustomAuth'],'prefix'=>'laporans'],function(){
+    Route::get('/penarikan/{token}',[LaporanWebController::class,'indexPenarikan']);
+    Route::get('/penarikan/{token}/download',[LaporanWebController::class,'downloadPenarikan'])->name('downloadPenarikan');
+    Route::get('/setoran/{token}',[LaporanWebController::class,'indexSetoran']);
+    Route::get('/setoran/{token}/download',[LaporanWebController::class,'downloadSetoran'])->name('downloadSetoran');
+});
