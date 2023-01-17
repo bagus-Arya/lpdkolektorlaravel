@@ -62,10 +62,17 @@ class SetoranMobileController extends Controller
     }
 
     public function setoran(Request $request, $token){
+        $todayDate = Carbon::now()->format('Y-m-d');
+        
         $data = Transaksi::where('type_transaksi','Setoran')
         ->with('bukutabungan.nasabah.kolektor')
         ->get();
 
-        return view('setoran',compact('data'));
+        $SumDay = Transaksi::where('type_transaksi','Setoran')
+        ->where('tgl_transaksi',$todayDate)
+        ->with('bukutabungan.nasabah.kolektor')
+        ->sum('nominal');
+
+        return view('setoran',compact('data','SumDay'));
     }
 }
