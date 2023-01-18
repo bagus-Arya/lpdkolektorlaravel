@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CustomAuthBendaharaMiddleware
+class CustomAuthKetuaAndBendaharaMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,9 @@ class CustomAuthBendaharaMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->get('login_user')->role!="Bendahara"){
-            return response()->json(['message' => 'Forbiden'], 403);
+        if(($request->get('login_user')->role=="Bendahara")||($request->get('login_user')->role=="Ketua")){
+            return $next($request);
         }
-        return $next($request);
+        return response()->json(['message' => 'Forbiden'], 403);
     }
 }

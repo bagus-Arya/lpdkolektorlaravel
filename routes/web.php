@@ -18,25 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/test',[TransaksiMobileController::class,'grafik']);
-
-
-Route::group(['middleware'=>['CustomAuth','BendaharaCustomAuth']],function(){
+Route::group(['middleware'=>['CustomAuth','KetuaAndBendahara']],function(){
     Route::get('/grafik_kolektor/{token}',[BendaharaGrafikWebController::class,'index']);
 });
 
-Route::group(['middleware'=>['CustomAuth','BendaharaCustomAuth'],'prefix'=>'laporan'],function(){
-    Route::get('/penarikan/{token}',[LaporanWebController::class,'indexPenarikan']);
-    Route::get('/penarikan/{token}/download',[LaporanWebController::class,'downloadPenarikan'])->name('downloadPenarikan');
-    Route::get('/setoran/{token}',[LaporanWebController::class,'indexSetoran']);
-    Route::get('/setoran/{token}/download',[LaporanWebController::class,'downloadSetoran'])->name('downloadSetoran');
-});
-
-Route::group(['middleware'=>['CustomAuth','KetuaCustomAuth']],function(){
-    Route::get('/grafik_kolektors/{token}',[BendaharaGrafikWebController::class,'index']);
-});
-
-Route::group(['middleware'=>['CustomAuth','KetuaCustomAuth'],'prefix'=>'laporans'],function(){
+Route::group(['middleware'=>['CustomAuth','KetuaAndBendahara'],'prefix'=>'laporan'],function(){
     Route::get('/penarikan/{token}',[LaporanWebController::class,'indexPenarikan']);
     Route::get('/penarikan/{token}/download',[LaporanWebController::class,'downloadPenarikan'])->name('downloadPenarikan');
     Route::get('/setoran/{token}',[LaporanWebController::class,'indexSetoran']);
